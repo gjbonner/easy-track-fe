@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    const url = "http://localhost:8000/events";
+    fetch(url)
+      .then((r) => r.json())
+      .then((json) => setEvents(json))
+      .catch((e) => console.log(e));
+  };
+
+  const renderEvents = () => {
+    return events.map((e) => {
+      const { severity, eventTime } = e;
+      return (
+        <div>
+          <p>{eventTime}</p>
+          <p>{severity}</p>
+        </div>
+      );
+    });
+  };
+
+  return <div className="App">{renderEvents()}</div>;
 }
 
 export default App;
